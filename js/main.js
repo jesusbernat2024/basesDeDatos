@@ -1,12 +1,7 @@
-
-
-document.getElementById('btnGuardar').onclick = async function (e) {
+document.getElementById('envioSQL').onsubmit = async function (e) {
     e.preventDefault();
 
-    n = document.getElementById('nombre').value;
-    a = document.getElementById('apellido').value;
-    c = document.getElementById('confColor').value;
-    orden = "guardar";
+    sql = document.getElementById('sql').value;
     
     response = await fetch(`/cgi-bin/funciones.cgi`,{
         method: 'POST',
@@ -14,39 +9,33 @@ document.getElementById('btnGuardar').onclick = async function (e) {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: new URLSearchParams({
-            'nombre':n,
-            'apellido':a,
-            'color':c,
-            'orden':orden
+            'q':sql
+        })
+    });
+    data = await response.text();
+    
+    document.getElementById('resultado').innerHTML = sql + decodeURI(data);
+    document.getElementByTagName('textarea')[0].value = "";
+    
+};
+
+
+document.getElementsByTagName('body')[0].onload = async function (e) {
+    e.preventDefault();
+
+    sql = "SELECT * FROM Personas";
+    
+    response = await fetch(`/cgi-bin/funciones.cgi`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            'q':sql
         })
     });
     data = await response.text();
     
     document.getElementById('resultado').innerHTML = decodeURI(data);
-    
-};
-
-
-document.getElementById('btnCargar').onclick = async function (e) {
-    e.preventDefault();
-
-    orden = "cargar";
-    
-    response = await fetch(`/cgi-bin/funciones.cgi`,{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-            'orden':orden
-        })
-    });
-    data = await response.json();
-    
-    document.getElementById('nombre').value = decodeURI(data.nombre);
-    document.getElementById('apellido').value = decodeURI(data.apellido);
-    document.getElementById('confColor').value = decodeURIComponent(data.color);
-    document.getElementById('idBody').style.backgroundColor = decodeURIComponent(data.color);
-    document.getElementById('resultado').innerHTML = decodeURI(data.mensaje);
     
 };

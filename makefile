@@ -1,9 +1,9 @@
-EJECUTABLE = .\cgi-bin\funciones.exe
+EJECUTABLE = .\cgi-bin\funciones.cgi
 ARCHIVOS = .\cgi-bin\funciones.cpp 
 LIBRERIAS = -L. -lsqlite3
 PUERTO = 8000
 
-all: elimina compila ejecuta
+all: elimina compila abre_navegador abre_servidor
 
 elimina:
 	del $(EJECUTABLE)
@@ -11,14 +11,12 @@ elimina:
 compila: $(ARCHIVOS)
 	g++ -o $(EJECUTABLE) $(ARCHIVOS) $(LIBRERIAS)
 
+# ya no hacemos esto
 ejecuta:
 	$(EJECUTABLE)
 
-
-# de momento no uso lo siguiente
 abre_servidor:
 	python -m http.server --cgi $(PUERTO)
 
-# de momento no uso lo siguiente
 abre_navegador:
 	cmd /c start http://localhost:$(PUERTO)
